@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Ping Pong</title>
+  <style media="screen">
+  canvas {
+    width: 800px;
+    height: 500px;
+    border: solid grey 15px;
+    background: green;
+
+  }
+  </style>
+</head>
+
+<body id="body">
+
+  <canvas id="myCanvas"></canvas>
+</body>
+<script type="text/javascript">
+
+var canvas = document.getElementById('myCanvas');
+var ctx = canvas.getContext('2d');
+canvas.height = 500;
+canvas.width = 750;
+var Paddle1x = 1;  // A = The keypress
+var Paddle1y = 1;  // Z = The keypress
+var Paddle2x = 728;  // M = The keypress
+var Paddle2y = 1;  //  K = The keypress
+
+var keyAction = document.getElementById('body');
+keyAction.addEventListener("keypress", function(evt) {
+  switch (evt.keyCode) {   // switching the Up and Down of the Paddle
+  case 97:
+    Paddle1y -=10;
+    break;
+  case 122:
+    Paddle1y +=10;
+    break;
+  case 107:
+    Paddle2y -=10;
+    break;
+  case 109:
+    Paddle2y +=10;
+    break;
+    //  default:
+  }
+});
+
+// Intersect of the Ball
+var right1 = {
+  left: 0,
+  top: 0,
+  right: 100,
+  bottom: 100
+}
+var right2 = {
+  left: 0,
+  top: 0,
+  right: 100,
+  bottom: 100
+}
+function Intersect (right1, right2) {
+  return !(right1.right < right2.left ||
+    right1.Top > right2.bottom ||
+    right1.Left > right2.Left ||
+    rigth1.bottom > right2.top
+  );
+};
+console.log(Intersect);
+
+var ball = {x: 100, y:300, radius: 20, dx:4, dy:4};
+var xDirectional = 1;
+var yDirectional = 1;
+
+function draw(dt) {
+  // clear screen
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // draw rectangle  Pabble 1
+  ctx.fillStyle = 'orange';
+  ctx.fillRect(Paddle1x, Paddle1y, 20, 175);
+  // Paddle 2
+  ctx.fillStyle = 'blue';
+  ctx.fillRect(Paddle2x, Paddle2y, 20, 175);
+
+  // draw the circle  = Ball
+  ctx.fillStyle = 'red';
+  ctx.lineWidth = 10;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.arc(ball.x,ball.y,ball.radius,0,Math.PI * 2, false);                          //  ctx.lineTo(100, 100);
+  ctx.fill();
+  ctx.fillStyle = '#020';
+  //Change position of the Ball
+  //          ball.x += ball.dx;
+  //          ball.y += ball.dy;
+  if (ball.x + ball.radius >= canvas.width || ball.x - ball.radius < 0) {
+    xDirectional = xDirectional * -1;
+  }
+  if (ball.y  + ball.radius >= canvas.height || ball.y -ball.radius < 0) {
+    yDirectional = yDirectional * -1;
+  }
+  if (xDirectional == 1) {
+    ball.x += ball.dx;
+  }
+  else {
+    ball.x -= ball.dx;
+  }
+  if (yDirectional == 1) {
+    ball.y += ball.dy;
+  }
+  else {
+    ball.y -= ball.dy;
+
+  }
+  // Animation
+  requestAnimationFrame(draw);
+}
+
+requestAnimationFrame(draw);
+
+</script>
+
+
+</html>
